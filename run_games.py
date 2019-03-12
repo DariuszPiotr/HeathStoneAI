@@ -23,7 +23,7 @@ def load_deck(filename):
                     character_class = card.character_class
                 cards.append(card)
 
-    if len(cards) > 30:
+    if len(cards) > 20:
         pass
 
     return Deck(cards, hero_for_class(character_class))
@@ -48,8 +48,8 @@ def do_stuff():
         if _count % 1000 == 0:
             print("---- game #{} ----".format(_count))
 
-    deck1 = load_deck("mage.hsdeck")
-    deck2 = load_deck("mage2.hsdeck")
+    deck1 = load_deck("test_deck.hsdeck")
+    deck2 = load_deck("test_deck.hsdeck")
     game = Game([deck1, deck2], [RandomAgent(), RandomAgent()])
 
     print(timeit.timeit(play_game, 'gc.enable()', number=100000))

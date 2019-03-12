@@ -538,13 +538,13 @@ class Player(Bindable):
 
 class Deck:
     def __init__(self, cards, hero):
-        if len(cards) != 30:
-            raise GameException("Deck must have exactly 30 cards in it")
+        if len(cards) != 20:
+            raise GameException("Deck must have exactly 20 cards in it")
         self.cards = cards
         self.hero = hero
         for card in cards:
             card.drawn = False
-        self.left = 30
+        self.left = 20
 
     def copy(self):
         def copy_card(card):
