@@ -2,5 +2,6 @@
 .project
 .pydevproject
 .coverage
+.idea
 htmlcov
 _build

@@ -125,3 +125,34 @@ class RandomAgent(DoNothingAgent):
     def choose_option(self, options, player):
         options = self.filter_options(options, player)
         return options[random.randint(0, len(options) - 1)]
+
+
+class GreedyAttackHeroAgent(DoNothingAgent):
+    def __init__(self):
+        super().__init__()
+
+    def do_card_check(self, cards):
+        return [True, True, True, True]
+
+    def do_turn(self, player):
+        while True:
+            attack_minions = [minion for minion in filter(lambda minion: minion.can_attack(), player.minions)]
+            playable_cards = [card for card in filter(lambda card: card.can_use(player, player.game), player.hand)]
+            possible_actions = len(attack_minions) + len(playable_cards)
+            if possible_actions > 0:
+                if len(attack_minions) > 0:
+                    attack_minions[0].attack()
+                else:
+                    player.game.play_card(playable_cards[0])
+            else:
+                return
+
+    def choose_target(self, targets):
+        return targets[len(targets)-1]
+
+    def choose_index(self, card, player):
+        return random.randint(0, len(player.minions))
+
+    def choose_option(self, options, player):
+        options = self.filter_options(options, player)
+        return options[random.randint(0, len(options) - 1)]
