@@ -7,7 +7,6 @@ import hearthbreaker.tags
 from hearthbreaker.tags.base import Effect, AuraUntil
 import hearthbreaker.targeting
 
-
 card_table = {}
 
 
@@ -44,6 +43,13 @@ def get_cards():
     card_list = filter(lambda c: c.collectible,
                        [card() for card in card_table.values()])
     return card_list
+
+
+def get_list_of_card(cards):
+    string_of_cards = ''
+    for card in cards:
+        string_of_cards = string_of_cards + card.__str__() + ','
+    return string_of_cards
 
 
 class Game(Bindable):
@@ -134,7 +140,19 @@ class Game(Bindable):
         self.pre_game()
         self.current_player = self.players[1]
         while not self.game_ended:
+            self.log_game(self.players)
             self.play_single_turn()
+
+    def log_game(self, players):
+        print('------ Next turn ----')
+        print(players[0].__str__() + ' hp: ' + str(players[0].hero.health))
+        print('Hand: ' + get_list_of_card(players[0].hand))
+        print('Minions: ' + get_list_of_card(players[0].minions))
+        print()
+        print('Minions: ' + get_list_of_card(players[1].minions))
+        print('Hand: ' + get_list_of_card(players[1].hand))
+        print(players[1].__str__() + ' hp: ' + str(players[1].hero.health))
+        print()
 
     def play_single_turn(self):
         self._start_turn()
@@ -443,6 +461,7 @@ class Player(Bindable):
             effect.unapply()
             self.effects.remove(effect)
             effect.event.unbind(self.hero, remove_effect)
+
         self.effects.append(effect)
         effect.set_owner(self.hero)
         effect.apply()
@@ -551,6 +570,7 @@ class Deck:
             new_card = type(card)()
             new_card.drawn = card.drawn
             return new_card
+
         new_deck = Deck.__new__(Deck)
         new_deck.cards = [copy_card(card) for card in self.cards]
         new_deck.hero = self.hero

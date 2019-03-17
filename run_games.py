@@ -1,5 +1,5 @@
 import json
-from hearthbreaker.agents.basic_agents import RandomAgent
+from hearthbreaker.agents.basic_agents import RandomAgent, GreedyAttackHeroAgent
 from hearthbreaker.cards.heroes import hero_for_class
 from hearthbreaker.constants import CHARACTER_CLASS
 from hearthbreaker.engine import Game, Deck, card_lookup
@@ -31,9 +31,11 @@ def load_deck(filename):
 
 def do_stuff():
     _count = 0
+    player_one_win = 0
+    player_two_win = 0
 
     def play_game():
-        nonlocal _count
+        nonlocal _count, player_two_win, player_one_win
         _count += 1
         new_game = game.copy()
         try:
@@ -43,6 +45,14 @@ def do_stuff():
             print(new_game._all_cards_played)
             raise e
 
+        print('Player one hp: ' + str(new_game.players[0].hero.health) + ' vs ' +
+              'Player two hp: ' + str(new_game.players[1].hero.health))
+
+        if new_game.players[1].hero.health == 0:
+            player_one_win += 1
+        else:
+            player_two_win += 1
+
         del new_game
 
         if _count % 1000 == 0:
@@ -50,9 +60,11 @@ def do_stuff():
 
     deck1 = load_deck("test_deck.hsdeck")
     deck2 = load_deck("test_deck.hsdeck")
-    game = Game([deck1, deck2], [RandomAgent(), RandomAgent()])
+    game = Game([deck1, deck2], [GreedyAttackHeroAgent(), RandomAgent()])
+    print('\nTime: ' + str(timeit.timeit(play_game, 'gc.enable()', number=1)))
 
-    print(timeit.timeit(play_game, 'gc.enable()', number=100000))
+    print('Player one won: ' + str(player_one_win) + ' games, '+ game.players[0].agent.__class__.__name__)
+    print('Player two won: ' + str(player_two_win) + ' games, '+ game.players[1].agent.__class__.__name__)
 
 
 if __name__ == "__main__":

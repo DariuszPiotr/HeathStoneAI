@@ -1,8 +1,10 @@
 import abc
 import copy
-
+import json
 import random
+
 from hearthbreaker.cards.base import Card
+from hearthbreaker.game_objects import Minion
 
 
 class Agent(metaclass=abc.ABCMeta):
@@ -135,7 +137,15 @@ class GreedyAttackHeroAgent(DoNothingAgent):
         return [True, True, True, True]
 
     def do_turn(self, player):
+        coin_is_played = False
         while True:
+            if not coin_is_played:
+                playable_cards = [card for card in filter(lambda card: card.can_use(player, player.game), player.hand)]
+                coin = self.get_coin(playable_cards)
+                if coin is not None:
+                    player.game.play_card(coin)
+                coin_is_played = True
+
             attack_minions = [minion for minion in filter(lambda minion: minion.can_attack(), player.minions)]
             playable_cards = [card for card in filter(lambda card: card.can_use(player, player.game), player.hand)]
             possible_actions = len(attack_minions) + len(playable_cards)
@@ -143,12 +153,29 @@ class GreedyAttackHeroAgent(DoNothingAgent):
                 if len(attack_minions) > 0:
                     attack_minions[0].attack()
                 else:
-                    player.game.play_card(playable_cards[0])
+                    player.game.play_card(self.get_max_cost_card(playable_cards))
             else:
                 return
 
+
+    def get_max_cost_card(self,playable_cards):
+        max_mana_card = None
+        for card in playable_cards:
+            if max_mana_card is None:
+                max_mana_card = card
+            elif card.mana_cost() > max_mana_card.mana_cost():
+                max_mana_card = card
+        return max_mana_card
+
+
+    def get_coin(self, playable_cards):
+        for card in playable_cards:
+            if not card.is_minion():
+                return card
+        return None
+
     def choose_target(self, targets):
-        return targets[len(targets)-1]
+        return targets[len(targets) - 1]
 
     def choose_index(self, card, player):
         return random.randint(0, len(player.minions))
