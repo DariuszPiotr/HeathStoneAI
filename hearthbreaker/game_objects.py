@@ -414,7 +414,7 @@ class Character(Bindable, GameObject, metaclass=abc.ABCMeta):
                     buff.unapply()
             self.buffs = [buff for buff in self.buffs if not isinstance(buff.status, Stealth)]
 
-    def attack(self):
+    def attack(self, opponent_minions = []):
         """
         Causes this :class:`Character` to attack.
 
@@ -445,7 +445,7 @@ class Character(Bindable, GameObject, metaclass=abc.ABCMeta):
         else:
             targets.append(self.player.game.other_player.hero)
 
-        target = self.choose_target(targets)
+        target = self.choose_target(targets,opponent_minions, self.base_attack, self.health)
         self._remove_stealth()
         self.current_target = target
         self.player.trigger("character_attack", self, self.current_target)
@@ -464,13 +464,13 @@ class Character(Bindable, GameObject, metaclass=abc.ABCMeta):
         self.stealth = False
         self.current_target = None
 
-    def choose_target(self, targets):
+    def choose_target(self, targets, opponent_minions = [] , attack = 0, health = 0):
         """
         Consults the associated player to select a target from a list of targets
 
         :param list[Character] targets: the targets to choose a target from
         """
-        return self.player.choose_target(targets)
+        return self.player.choose_target(targets, opponent_minions, attack, health)
 
     def calculate_stat(self, stat_class, starting_value=0):
         """
@@ -952,8 +952,8 @@ class Minion(Character):
         self.removed = True
         self.replaced_by = new_minion
 
-    def attack(self):
-        super().attack()
+    def attack(self, opponent_minions = []):
+        super().attack(opponent_minions)
 
     def damage(self, amount, attacker):
         if self.divine_shield:
