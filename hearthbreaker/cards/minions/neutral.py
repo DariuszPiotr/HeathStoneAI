@@ -30,6 +30,8 @@ import copy
 class BloodfenRaptor(MinionCard):
     def __init__(self):
         super().__init__("Bloodfen Raptor", 2, CHARACTER_CLASS.ALL, CARD_RARITY.FREE, minion_type=MINION_TYPE.BEAST)
+        self.attack = 3
+        self.health = 2
 
     def create_minion(self, player):
         return Minion(3, 2)
@@ -73,6 +75,8 @@ class IronbeakOwl(MinionCard):
 class WarGolem(MinionCard):
     def __init__(self):
         super().__init__("War Golem", 7, CHARACTER_CLASS.ALL, CARD_RARITY.COMMON)
+        self.attack = 7
+        self.health = 7
 
     def create_minion(self, player):
         return Minion(7, 7)
@@ -97,6 +101,8 @@ class FaerieDragon(MinionCard):
 class KoboldGeomancer(MinionCard):
     def __init__(self):
         super().__init__("Kobold Geomancer", 2, CHARACTER_CLASS.ALL, CARD_RARITY.COMMON)
+        self.attack = 2
+        self.health = 2
 
     def create_minion(self, player):
         return Minion(2, 2, spell_damage=1)
@@ -107,6 +113,7 @@ class ArgentSquire(MinionCard):
         super().__init__("Argent Squire", 1, CHARACTER_CLASS.ALL, CARD_RARITY.COMMON)
 
     def create_minion(self, player):
+        
         return Minion(1, 1, divine_shield=True)
 
 
@@ -130,6 +137,8 @@ class TwilightDrake(MinionCard):
 class MagmaRager(MinionCard):
     def __init__(self):
         super().__init__("Magma Rager", 3, CHARACTER_CLASS.ALL, CARD_RARITY.FREE)
+        self.attack = 5
+        self.health = 1
 
     def create_minion(self, player):
         return Minion(5, 1)
@@ -278,9 +287,13 @@ class LordOfTheArena(MinionCard):
 class MurlocRaider(MinionCard):
     def __init__(self):
         super().__init__("Murloc Raider", 1, CHARACTER_CLASS.ALL, CARD_RARITY.FREE, minion_type=MINION_TYPE.MURLOC)
+        self.attack = 2
+        self.health = 1
 
     def create_minion(self, player):
         return Minion(2, 1)
+    
+        
 
 
 class ManaAddict(MinionCard):
@@ -295,6 +308,8 @@ class ManaAddict(MinionCard):
 class OasisSnapjaw(MinionCard):
     def __init__(self):
         super().__init__("Oasis Snapjaw", 4, CHARACTER_CLASS.ALL, CARD_RARITY.FREE, minion_type=MINION_TYPE.BEAST)
+        self.attack = 2
+        self.health = 7
 
     def create_minion(self, player):
         return Minion(2, 7)
@@ -311,6 +326,8 @@ class RecklessRocketeer(MinionCard):
 class RiverCrocolisk(MinionCard):
     def __init__(self):
         super().__init__("River Crocolisk", 2, CHARACTER_CLASS.ALL, CARD_RARITY.FREE, minion_type=MINION_TYPE.BEAST)
+        self.attack = 2
+        self.health = 3
 
     def create_minion(self, player):
         return Minion(2, 3)
@@ -442,6 +459,8 @@ class BootyBayBodyguard(MinionCard):
 class BoulderfistOgre(MinionCard):
     def __init__(self):
         super().__init__("Boulderfist Ogre", 6, CHARACTER_CLASS.ALL, CARD_RARITY.FREE)
+        self.attack = 6
+        self.health = 7
 
     def create_minion(self, player):
         return Minion(6, 7)
@@ -450,6 +469,8 @@ class BoulderfistOgre(MinionCard):
 class ChillwindYeti(MinionCard):
     def __init__(self):
         super().__init__("Chillwind Yeti", 4, CHARACTER_CLASS.ALL, CARD_RARITY.COMMON)
+        self.attack = 4
+        self.health = 5
 
     def create_minion(self, player):
         return Minion(4, 5)
@@ -527,6 +548,8 @@ class BluegillWarrior(MinionCard):
 class Wisp(MinionCard):
     def __init__(self):
         super().__init__("Wisp", 0, CHARACTER_CLASS.ALL, CARD_RARITY.COMMON)
+        self.attack = 1
+        self.health = 1
 
     def create_minion(self, player):
         return Minion(1, 1)

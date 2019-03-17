@@ -224,6 +224,10 @@ class MinionCard(Card, metaclass=abc.ABCMeta):
         """
         return len(player.minions) < 7 and super().can_use(player, game)
 
+    def set_parametes(self, attack, health):
+        self.attack = attack
+        self.health = health
+
     def use(self, player, game):
         """
         Adds this minion to the board for the given player, if the card is able to be played.  The agent for the

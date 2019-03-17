@@ -1,5 +1,5 @@
 import json
-from hearthbreaker.agents.basic_agents import RandomAgent, GreedyAttackHeroAgent
+from hearthbreaker.agents.basic_agents import RandomAgent, GreedyAttackHeroAgent, GreedyControlHeroAgent
 from hearthbreaker.cards.heroes import hero_for_class
 from hearthbreaker.constants import CHARACTER_CLASS
 from hearthbreaker.engine import Game, Deck, card_lookup
@@ -60,7 +60,7 @@ def do_stuff():
 
     deck1 = load_deck("test_deck.hsdeck")
     deck2 = load_deck("test_deck.hsdeck")
-    game = Game([deck1, deck2], [GreedyAttackHeroAgent(), RandomAgent()])
+    game = Game([deck1, deck2], [GreedyAttackHeroAgent(), GreedyControlHeroAgent()])
     print('\nTime: ' + str(timeit.timeit(play_game, 'gc.enable()', number=1)))
 
     print('Player one won: ' + str(player_one_win) + ' games, '+ game.players[0].agent.__class__.__name__)

@@ -148,6 +148,7 @@ class GreedyAttackHeroAgent(DoNothingAgent):
 
             attack_minions = [minion for minion in filter(lambda minion: minion.can_attack(), player.minions)]
             playable_cards = [card for card in filter(lambda card: card.can_use(player, player.game), player.hand)]
+
             possible_actions = len(attack_minions) + len(playable_cards)
             if possible_actions > 0:
                 if len(attack_minions) > 0:
@@ -156,7 +157,6 @@ class GreedyAttackHeroAgent(DoNothingAgent):
                     player.game.play_card(self.get_max_cost_card(playable_cards))
             else:
                 return
-
 
     def get_max_cost_card(self,playable_cards):
         max_mana_card = None
@@ -174,8 +174,9 @@ class GreedyAttackHeroAgent(DoNothingAgent):
                 return card
         return None
 
-    def choose_target(self, targets):
-        return targets[len(targets) - 1]
+    def choose_target(self, targets, oponent_minions = [], attack = 0, health = 0):
+        return targets[len(targets)-1]
+
 
     def choose_index(self, card, player):
         return random.randint(0, len(player.minions))
@@ -183,3 +184,71 @@ class GreedyAttackHeroAgent(DoNothingAgent):
     def choose_option(self, options, player):
         options = self.filter_options(options, player)
         return options[random.randint(0, len(options) - 1)]
+    
+
+class GreedyControlHeroAgent(DoNothingAgent):
+    def __init__(self):
+        super().__init__()
+
+    def do_card_check(self, cards):
+        return [True, True, True, True]
+
+    def do_turn(self, player):
+        while True:
+            attack_minions = [minion for minion in filter(lambda minion: minion.can_attack(), player.minions)]
+            playable_cards = [card for card in filter(lambda card: card.can_use(player, player.game), player.hand)]
+            possible_actions = len(attack_minions) + len(playable_cards)
+            if possible_actions > 0:
+                if len(attack_minions) > 0:
+                    attack_minions[0].attack(player.opponent.minions)
+                else:
+                    player.game.play_card(playable_cards[0])
+            else:
+                return
+
+    def choose_target(self, targets, oponent_minions = [], attack = 0, health = 0):
+        if len(oponent_minions) == 0:
+            return targets[len(targets)-1]
+        my_attack = attack
+        my_def = health
+
+        index = self.find_best( (my_attack, my_def), oponent_minions )
+        return targets[index]
+
+    def choose_index(self, card, player):
+        return random.randint(0, len(player.minions))
+
+    def choose_option(self, options, player):
+        options = self.filter_options(options, player)
+        return options[random.randint(0, len(options) - 1)]
+            
+    def find_best(self, player, y):
+        index = 0 
+        total = -100
+        idx_attack = 0
+        idx_def = 0
+        pl_attack = player[idx_attack]
+        pl_deff = player[idx_def]
+        
+        for i in range(len(y)):
+            attack = y[i].base_attack
+            deff = y[i].health
+            diff_attack = pl_attack - deff
+            diff_deff = pl_deff - attack
+            
+            if diff_attack >= 0 and diff_deff > 0:
+                total_temp = 50 + diff_attack + diff_deff
+                if total_temp > total:
+                    total = total_temp
+                    index = i
+                    print(f"{index},{total}")
+            else:
+                total_temp = diff_attack + diff_deff
+                if total_temp > total:
+                    total = total_temp
+                    index = i
+                    print(f"{index},{total}")
+        
+        return index
+
+   

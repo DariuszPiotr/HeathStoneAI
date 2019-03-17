@@ -487,9 +487,9 @@ class Player(Bindable):
                     break
         aura.unapply()
 
-    def choose_target(self, targets):
-        return self.agent.choose_target(targets)
-
+    def choose_target(self, targets, opponent_minions = [], attack = 0, health = 0):
+        return self.agent.choose_target(targets, opponent_minions, attack, health)
+        
     def is_valid(self):
         return True
 
